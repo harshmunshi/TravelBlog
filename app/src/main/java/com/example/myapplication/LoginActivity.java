@@ -3,7 +3,9 @@ package com.example.myapplication;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +17,7 @@ public class LoginActivity extends AppCompatActivity{
     private TextInputLayout textUsernameLayout;
     private TextInputLayout textPasswordInput;
     private Button loginButton;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,7 +27,7 @@ public class LoginActivity extends AppCompatActivity{
         textUsernameLayout = findViewById(R.id.textUsernameLayout);
         textPasswordInput = findViewById(R.id.textPasswordLayout);
         loginButton = findViewById(R.id.loginButton);
-
+        progressBar = findViewById(R.id.progressBar);
         loginButton.setOnClickListener(v -> LoginActivity.this.onLoginClicked());
         textUsernameLayout.getEditText().addTextChangedListener(createTextWatcher(textUsernameLayout));
         textPasswordInput.getEditText().addTextChangedListener(createTextWatcher(textPasswordInput));
@@ -58,9 +61,17 @@ public class LoginActivity extends AppCompatActivity{
             textPasswordInput.setError("Password cannot be empty!");
         } else if (!username.equals("admin") && !password.equals("admin")) {
             showErrorDialog();
+        } else {
+            performLogin();
         }
     }
 
+    private void performLogin() {
+        textUsernameLayout.setEnabled(false);
+        textPasswordInput.setEnabled(false);
+        loginButton.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
     private void showErrorDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Login Failed")
